@@ -1,0 +1,118 @@
+[
+    {
+        "label": "glob",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "glob",
+        "description": "glob",
+        "detail": "glob",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "yaml",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "yaml",
+        "description": "yaml",
+        "detail": "yaml",
+        "documentation": {}
+    },
+    {
+        "label": "OrderedDict",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
+        "documentation": {}
+    },
+    {
+        "label": "category_ids",
+        "kind": 5,
+        "importPath": "scripts.m3u_to_yaml",
+        "description": "scripts.m3u_to_yaml",
+        "peekOfCode": "category_ids = { \"radio\" : 2, \"tv\" : 1 }\nsubcategory_ids = {\n    \"tv\" :\n    {\n        \"atch\" : 6,\n        \"extra\" : 5,\n        \"international\" : 8,\n        \"local\" : 4,\n        \"main\" : 1,\n        \"regional\" : 3,",
+        "detail": "scripts.m3u_to_yaml",
+        "documentation": {}
+    },
+    {
+        "label": "subcategory_ids",
+        "kind": 5,
+        "importPath": "scripts.m3u_to_yaml",
+        "description": "scripts.m3u_to_yaml",
+        "peekOfCode": "subcategory_ids = {\n    \"tv\" :\n    {\n        \"atch\" : 6,\n        \"extra\" : 5,\n        \"international\" : 8,\n        \"local\" : 4,\n        \"main\" : 1,\n        \"regional\" : 3,\n        \"shop\" : 2,",
+        "detail": "scripts.m3u_to_yaml",
+        "documentation": {}
+    },
+    {
+        "label": "streams",
+        "kind": 5,
+        "importPath": "scripts.m3u_to_yaml",
+        "description": "scripts.m3u_to_yaml",
+        "peekOfCode": "streams = {}\n# read .m3u\nm3u_files = glob.glob(\"iptv/clean/clean_*_*.m3u\")\nfor filename in m3u_files:\n    m = re.search(\"clean_(.*)_(.*).m3u\", filename)\n    category = m.group(1)\n    if not category in streams:\n        category_id = 0\n        if category in category_ids:\n            category_id = category_ids[category]",
+        "detail": "scripts.m3u_to_yaml",
+        "documentation": {}
+    },
+    {
+        "label": "m3u_files",
+        "kind": 5,
+        "importPath": "scripts.m3u_to_yaml",
+        "description": "scripts.m3u_to_yaml",
+        "peekOfCode": "m3u_files = glob.glob(\"iptv/clean/clean_*_*.m3u\")\nfor filename in m3u_files:\n    m = re.search(\"clean_(.*)_(.*).m3u\", filename)\n    category = m.group(1)\n    if not category in streams:\n        category_id = 0\n        if category in category_ids:\n            category_id = category_ids[category]\n        else:\n            print(\"WARNING: could not determine category ID for \\\"\" + category + \"\\\"\")",
+        "detail": "scripts.m3u_to_yaml",
+        "documentation": {}
+    },
+    {
+        "label": "m3u_files",
+        "kind": 5,
+        "importPath": "scripts.m3u_to_yaml",
+        "description": "scripts.m3u_to_yaml",
+        "peekOfCode": "m3u_files = glob.glob(\"iptv/kodi/kodi_*_*.m3u\")\nfor filename in m3u_files:\n    m = re.search(\"kodi_(.*)_(.*).m3u\", filename)\n    category = m.group(1)\n    if not category in streams:\n        print(\"WARNING: category \\\"\" + category + \"\\\" exists only in Kodi list. Ignoring.\")\n        continue\n    subcategory = m.group(2)\n    if not subcategory in streams[category][\"subcategories\"]:\n        print(\"WARNING: category \\\"\" + category + \"\\\", subcategory \\\"\" + subcategory + \"\\\" exists only in Kodi list. Ignoring.\")",
+        "detail": "scripts.m3u_to_yaml",
+        "documentation": {}
+    },
+    {
+        "label": "m3u_files",
+        "kind": 5,
+        "importPath": "scripts.m3u_to_yaml",
+        "description": "scripts.m3u_to_yaml",
+        "peekOfCode": "m3u_files = glob.glob(\"iptv/pipe/pipe_*_*.m3u\")\nfor filename in m3u_files:\n    m = re.search(\"pipe_(.*)_(.*).m3u\", filename)\n    category = m.group(1)\n    if not category in streams:\n        print(\"WARNING: category \\\"\" + category + \"\\\" exists only in pipe list. Ignoring.\")\n        continue\n    subcategory = m.group(2)\n    if not subcategory in streams[category][\"subcategories\"]:\n        print(\"WARNING: category \\\"\" + category + \"\\\", subcategory \\\"\" + subcategory + \"\\\" exists only in pipe list. Ignoring.\")",
+        "detail": "scripts.m3u_to_yaml",
+        "documentation": {}
+    },
+    {
+        "label": "write_clean",
+        "kind": 2,
+        "importPath": "scripts.yaml_to_m3u",
+        "description": "scripts.yaml_to_m3u",
+        "peekOfCode": "def write_clean(content):\n    with open(\"iptv/clean/clean.m3u\", 'w') as file:\n        file.write(\"#EXTM3U\\n\")\n        for category_name, category in OrderedDict(sorted(content.items(), key=lambda x: x[1][\"id\"])).items():\n            with open(\"iptv/clean/clean_\" + category_name + \".m3u\", 'w') as category_file:\n                category_file.write(\"#EXTM3U\\n\")\n                for subcategory_name, subcategory in OrderedDict(sorted(category[\"subcategories\"].items(), key=lambda x: x[1][\"id\"])).items():\n                    with open(\"iptv/clean/clean_\" + category_name + \"_\" + subcategory_name + \".m3u\", 'w') as subcategory_file:\n                        subcategory_file.write(\"#EXTM3U\\n\")\n                        for stream in subcategory[\"streams\"]:",
+        "detail": "scripts.yaml_to_m3u",
+        "documentation": {}
+    },
+    {
+        "label": "write_kodi",
+        "kind": 2,
+        "importPath": "scripts.yaml_to_m3u",
+        "description": "scripts.yaml_to_m3u",
+        "peekOfCode": "def write_kodi(content):\n    with open(\"iptv/kodi/kodi.m3u\", 'w') as file:\n        file.write(\"#EXTM3U\\n\")\n        for category_name, category in OrderedDict(sorted(content.items(), key=lambda x: x[1][\"id\"])).items():\n            with open(\"iptv/kodi/kodi_\" + category_name + \".m3u\", 'w') as category_file:\n                category_file.write(\"#EXTM3U\\n\")\n                for subcategory_name, subcategory in OrderedDict(sorted(category[\"subcategories\"].items(), key=lambda x: x[1][\"id\"])).items():\n                    with open(\"iptv/kodi/kodi_\" + category_name + \"_\" + subcategory_name + \".m3u\", 'w') as subcategory_file:\n                        subcategory_file.write(\"#EXTM3U\\n\")\n                        for stream in subcategory[\"streams\"]:",
+        "detail": "scripts.yaml_to_m3u",
+        "documentation": {}
+    },
+    {
+        "label": "write_pipe",
+        "kind": 2,
+        "importPath": "scripts.yaml_to_m3u",
+        "description": "scripts.yaml_to_m3u",
+        "peekOfCode": "def write_pipe(content):\n    with open(\"iptv/pipe/pipe.m3u\", 'w') as file:\n        file.write(\"#EXTM3U\\n\")\n        for category_name, category in OrderedDict(sorted(content.items(), key=lambda x: x[1][\"id\"])).items():\n            with open(\"iptv/pipe/pipe_\" + category_name + \".m3u\", 'w') as category_file:\n                category_file.write(\"#EXTM3U\\n\")\n                for subcategory_name, subcategory in OrderedDict(sorted(category[\"subcategories\"].items(), key=lambda x: x[1][\"id\"])).items():\n                    with open(\"iptv/pipe/pipe_\" + category_name + \"_\" + subcategory_name + \".m3u\", 'w') as subcategory_file:\n                        subcategory_file.write(\"#EXTM3U\\n\")\n                        for stream in subcategory[\"streams\"]:",
+        "detail": "scripts.yaml_to_m3u",
+        "documentation": {}
+    }
+]
